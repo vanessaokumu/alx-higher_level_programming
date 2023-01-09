@@ -1,15 +1,10 @@
 #!/usr/bin/python3
-"""
-Write a class MyList that inherits from list
-"""
+"""Class definition"""
 
 
 class MyList(list):
-    """MyList class that inherits from list"""
-    def __init__(self):
-        """To initialise the object""
-        super().__init__()
+    """Class MyList inherited"""
 
     def print_sorted(self):
-        """prints the sorted list"""
+        """prints the sorted"""
         print(sorted(self))
