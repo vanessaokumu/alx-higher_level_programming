@@ -10,7 +10,7 @@ def append_after(filename="", search_string="", new_string=""):
         i = 0
         while i < len(lines):
             if search_string in lines[i]:
-                lines[i:i + 1] = [lines[i],new_string]
+                lines[i:i + 1] = [lines[i], new_string]
                 i += 1
             i += 1
     with open(filename, "w", encoding="utf-8") as f:
