@@ -2,7 +2,9 @@
 """
 Unittests for Base Class
 """
-import unittest, json, sys
+import unittest
+import json
+import sys
 from models.base import Base
 from models.rectangle import Rectangle
 from models.square import Square
