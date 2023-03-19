@@ -3,19 +3,23 @@
 database `hbtn_0e_0_usa`
 """
 
-if __name__ == "__main__":
-    import MySQLdb
-    import sys
+import MySQLdb
+from sys import argv
 
-    db = MySQLdb.connect(user=sys.argv[1],
-                         passwd=sys.argv[2],
-                         database=sys.argv[3])
-    cur = db.cursor()
-    cur.execute("SELECT * FROM states "
-                "WHERE name LIKE 'N%' "
-                "COLLATE 'latin1_general_cs' "
-                "ORDER BY id ASC")
-    for row in cur.fetchall():
-        print(row)
-    cur.close()
+if __name__ == "__main__":
+
+    # connect to database
+    db = MySQLdb.connect(host="localhost",
+                         port=3306,
+                         user=argv[1],
+                         passwd=argv[2],
+                         db=argv[3])
+
+    # create cursor to exec queries using SQL; filter names starting with 'N'
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM states WHERE name LIKE 'N%' ORDER BY id ASC")
+    for row in cursor.fetchall():
+        if row[1][0] == 'N':
+            print(row)
+    cursor.close()
     db.close()
