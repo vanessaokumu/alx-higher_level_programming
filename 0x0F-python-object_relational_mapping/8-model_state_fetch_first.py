@@ -1,43 +1,28 @@
 #!/usr/bin/python3
 """Script to list first `State` object from the database `hbtn_0e_6_usa`."""
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sys import argv
+from model_state import Base, State
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-Base = declarative_base()
-
-
-class State(Base):
-    """Class representing the `states` table.
-
-    Columns:
-        id (int): /NOT NULL/AUTO_INCREMENT/PRIMARY_KEY/
-        name (string): /VARCHAR(128)/NOT NULL/
-    """
-    __tablename__ = 'states'
-
-    id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
-    name = Column(String(128), nullable=False)
 
 if __name__ == "__main__":
-    import sys
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker
 
-    engine = create_engine('mysql+mysqldb://'
-                           '{}:{}@localhost/{}'
-                           .format(sys.argv[1],
-                                   sys.argv[2],
-                                   sys.argv[3]))
+    # make engine for database
+    user = argv[1]
+    passwd = argv[2]
+    db = argv[3]
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.
+                           format(user, passwd, db), pool_pre_ping=True)
     Session = sessionmaker(bind=engine)
     session = Session()
-    first = session.query(State).order_by(State.id).first()
-    try:
-        print("{}: {}".format(first.id, first.name))
-    except AttributeError:
-        if first is None:
-            print("Nothing")
-        else:
-            raise
+
+    # query first python instance in database
+    first_instance = session.query(State).order_by(State.id).first()
+    if first_instance:
+        print("{:d}: {:s}".format(first_instance.id, first_instance.name))
+    else:
+        print("Nothing")
+
+    session.close()
