@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""Script that takes state name as an argument and lists all cities from
-that state using database hbtn_0e_4_usa.
-"""
+"""Script to list all cities from database `hbtn_0e_4_usa`"""
 
 import MySQLdb
 from sys import argv
@@ -17,15 +15,13 @@ if __name__ == "__main__":
 
     # create cursor to exec queries using SQL; join two tables for all info
     cursor = db.cursor()
-    sql = """SELECT cities.name
+    sql = """SELECT cities.id, cities.name, states.name
                  FROM states
                  INNER JOIN cities ON states.id = cities.state_id
-                 WHERE states.name LIKE %s
                  ORDER BY cities.id ASC"""
-    cursor.execute(sql, (argv[4], ))
+    cursor.execute(sql)
 
-    # format the printing of cities of same state separated by commas
-    print(', '.join(["{:s}".format(row[0]) for row in cursor.fetchall()]))
-
+    for row in cursor.fetchall():
+        print(row)
     cursor.close()
     db.close()
