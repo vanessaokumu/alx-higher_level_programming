@@ -2,17 +2,11 @@
 
 const fs = require('fs');
 
-// Check if a file path argument is provided
-if (process.argv.length !== 3) {
-  console.error('Usage: node readfile.js <file-path>');
-  process.exit(1);
-}
-
 // file path from the command line arguments
 const filePath = process.argv[2];
 
 // Read the content of the file in utf-8 encoding
-fs.readFile(filePath, 'utf-8', (err, data) => {
+fs.readFile(filePath, 'utf-8', function (err, data) {
   if (err) {
     console.error(err);
   } else {
