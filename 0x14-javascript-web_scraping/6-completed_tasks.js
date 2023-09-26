@@ -3,34 +3,27 @@
 const request = require('request');
 
 // API URL for JSONPlaceholder
-const apiUrl = 'https://jsonplaceholder.typicode.com/todos';
+const apiURL = process.argv[2];
 
 // Make a GET request to fetch the todo data
-request.get(apiUrl, (error, response, body) => {
-  if (error) {
-    console.error(error);
-  } else {
-    // Parse the response body as JSON
-    const todos = JSON.parse(body);
-
-    // Create a map to store the count of completed tasks for each user
-    const userTaskCountMap = new Map();
-
-    // Iterate through the todos to count completed tasks for each user
-    todos.forEach((todo) => {
-      if (todo.completed) {
-        const userId = todo.userId;
-        if (userTaskCountMap.has(userId)) {
-          userTaskCountMap.set(userId, userTaskCountMap.get(userId) + 1);
+request(apiURL, function (err, response, body) {
+  if (err) {
+    console.log(err);
+  } else if (response.statusCode === 200) {
+    const completed = {};
+    const tasks = JSON.parse(body);
+    for (const i in tasks) {
+      const task = tasks[i];
+      if (task.completed === true) {
+        if (completed[task.userId] === undefined) {
+          completed[task.userId] = 1;
         } else {
-          userTaskCountMap.set(userId, 1);
+          completed[task.userId]++;
         }
       }
-    });
-
-    // Print the user IDs and the number of completed tasks
-    userTaskCountMap.forEach((count, userId) => {
-      console.log(`User ID ${userId}: Completed ${count} tasks`);
-    });
+    }
+    console.log(completed);
+  } else {
+    console.log('An error occured. Status code: ' + response.statusCode);
   }
 });
